@@ -18,7 +18,7 @@ class Macd extends Migration
             $table->string('value');
             $table->string('signal');
             $table->string('hist');
-            $table->tinyText('crossover')->default('N');
+            $table->tinyText('crossover');
             $table->timestamps();
         });
     }
