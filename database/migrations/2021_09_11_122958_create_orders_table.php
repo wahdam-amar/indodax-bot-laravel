@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('price_buy');
             $table->bigInteger('price_sell');
             $table->string('profit');
-            $table->tinyText('status')->default('P');
+            $table->tinyText('status');
             $table->timestamps();
         });
     }
