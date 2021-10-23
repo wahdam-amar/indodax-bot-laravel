@@ -46,7 +46,8 @@
                                         </path>
                                     </g>
                                 </svg>
-                                <p class="text-bold md:text2xl text-base pl-3 text-gray-800">The North</p>
+                                <p class="text-bold md:text2xl text-base pl-3 text-gray-800">{{ config('app.name',
+                                    'IdxBot') }}</p>
                             </div>
                             <button id="cross" class="hidden text-gray-800 focus:outline-none rounded"
                                 onclick="sidebarHandler(false)">
@@ -223,7 +224,7 @@
                                     <img alt="display avatar" role="img"
                                         src="https://tuk-cdn.s3.amazonaws.com/assets/components/boxed_layout/bl_1.png"
                                         class="w-8 h-8 rounded-md" />
-                                    <p class="text-gray-800 text-base leading-4 ml-2">Jane Doe</p>
+                                    <p class="text-gray-800 text-base leading-4 ml-2">{{ auth()->user()->name }}</p>
                                 </div>
                                 <ul class="flex">
                                     <li class="cursor-pointer text-white pt-5 pb-3">
@@ -275,7 +276,7 @@
                         </svg>
                         <h3
                             class="text-base text-gray-800 font-bold tracking-normal leading-tight ml-3 hidden lg:block">
-                            The North</h3>
+                            {{ config('app.name', 'IdxBot') }}</h3>
                     </div>
                     <ul class="pr-12 xl:flex items-center h-full hidden">
                         <li
@@ -340,7 +341,7 @@
                                     <img class="rounded-full h-10 w-10 object-cover"
                                         src="https://tuk-cdn.s3.amazonaws.com/assets/components/sidebar_layout/sl_1.png"
                                         alt="avatar" />
-                                    <p class="text-gray-800 text-sm ml-2">Jane Doe</p>
+                                    <p class="text-gray-800 text-sm ml-2">{{ auth()->user()->name }}</p>
                                 </button>
                                 <ul class="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-64 hidden">
                                     <li
