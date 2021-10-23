@@ -332,8 +332,7 @@
                                 <button aria-haspopup="true" onclick="dropdownHandler(this)"
                                     class="focus:outline-none rounded flex items-center">
                                     <img class="rounded-full h-10 w-10 object-cover"
-                                        src="https://tuk-cdn.s3.amazonaws.com/assets/components/sidebar_layout/sl_1.png"
-                                        alt="avatar" />
+                                        src="{{ Avatar::create(auth()->user()->name)->toBase64() }}" alt="avatar" />
                                     <p class="text-gray-800 text-sm ml-2">{{ auth()->user()->name }}</p>
                                 </button>
                                 <ul class="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-64 hidden">

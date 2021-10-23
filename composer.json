@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.54",
         "laravel/tinker": "^2.5",
+        "laravolt/avatar": "^4.1",
         "livewire/livewire": "^2.7",
         "spatie/laravel-menu": "^3.7",
         "spatie/laravel-permission": "^4.2"
