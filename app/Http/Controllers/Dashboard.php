@@ -12,8 +12,6 @@ class Dashboard extends Controller
         $openOrders = indodax()->openOrders();
         $indicators = (new Indicators)->get();
 
-        debug($indicators);
-
         return view('asset')->with('orders', $openOrders);
     }
 }
