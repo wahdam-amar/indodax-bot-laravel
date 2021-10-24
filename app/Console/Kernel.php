@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CreateSignalJob;
 use App\Models\Order;
 use App\Services\Indodax;
 use App\Services\Indicators;
@@ -31,7 +32,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new UpdateBalanceJob)->everyFifteenMinutes();
+        $schedule->job(new UpdateBalanceJob)->hourly();
+        $schedule->job(new CreateSignalJob)->everyFifteenMinutes();
     }
 
     /**

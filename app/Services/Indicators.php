@@ -23,27 +23,30 @@ class Indicators
      *
      * @return Collection
      */
-    public function get()
+    public function get($signal = [])
     {
         $this->query = json_encode((object) array(
 
             "secret" => config('indodax.tap_secret'),
             "construct" => (object) array(
                 "exchange" => $this->exchange ?? "binance",
-                "symbol" => $this->symbol ?? "BTC/USDT",
+                "symbol" => $this->symbol ?? "ETH/USDT",
                 "interval" => $this->interval ?? "1h",
                 "indicators" => array(
                     (object) array(
                         // Relative Strength Index
+                        "id" => "rsi",
                         "indicator" => "rsi"
                     ),
                     (object) array(
                         // Chaikin Money Flow
-                        "indicator" => "stoch",
+                        "id" => "stoch",
+                        "indicator" => "stoch"
                     ),
                     (object) array(
                         // MACD Backtracked 1
-                        "indicator" => "macd",
+                        "id" => "macd",
+                        "indicator" => "macd"
                     ),
                 )
             )
@@ -64,6 +67,12 @@ class Indicators
 
         // Close curl resource to free up system resources 
         curl_close($this->curl);
+
+        if ($signal) {
+            return collect(optional(json_decode($result))->data)->filter(function ($value, $key) use ($signal) {
+                return in_array($value->id, $signal);
+            });
+        }
 
         return collect(optional(json_decode($result))->data);
     }
