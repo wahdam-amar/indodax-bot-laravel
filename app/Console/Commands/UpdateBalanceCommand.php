@@ -3,10 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Models\Balance;
 use App\Models\Order;
+use App\Models\Balance;
 use App\Services\Indodax;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateBalanceCommand extends Command
 {
@@ -45,18 +46,24 @@ class UpdateBalanceCommand extends Command
             $api->whereNotNull(['api_key', 'secret_key']);
         })->get();
 
-        foreach ($userWithApi as $user) {
-            Order::create([
-                'user_id' => $user->id,
-                'coin' => 'from command',
-                'amount' => $user->id,
-                'price_buy' => $user->id,
-                'price_sell' => $user->id,
-                'profit' => $user->id,
-                'status' => 1,
-            ]);
+        try {
+            $this->info($userWithApi->count());
 
-            $this->info($user->name);
+            foreach ($userWithApi as $user) {
+                Order::create([
+                    'user_id' => $user->id,
+                    'coin' => 'from command',
+                    'amount' => $user->id,
+                    'price_buy' => $user->id,
+                    'price_sell' => $user->id,
+                    'profit' => $user->id,
+                    'status' => 1,
+                ]);
+
+                $this->info($user->name);
+            }
+        } catch (\Throwable $th) {
+            Log::warning('Error UpdateBalanceCommand with ' . $userWithApi->count() . ' ' . $th);
         }
     }
 }
