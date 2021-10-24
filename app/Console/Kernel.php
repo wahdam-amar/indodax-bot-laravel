@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new UpdateBalanceJob)->hourly();
-        $schedule->job(new CreateSignalJob)->everyFifteenMinutes();
+        $schedule->job(new CreateSignalJob)->everyMinute();
     }
 
     /**
