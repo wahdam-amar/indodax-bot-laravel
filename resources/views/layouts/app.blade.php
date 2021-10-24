@@ -77,7 +77,8 @@
                                                 stroke-linejoin="round" />
                                         </svg>
                                     </div>
-                                    <a href="javascript:void(0)" class="text-indigo-500 ml-3 text-lg">Dashboard</a>
+                                    <a href="{{ route('dashboard') }}"
+                                        class="text-indigo-500 ml-3 text-lg">Dashboard</a>
                                 </div>
                             </li>
                             <li class="text-gray-700 pt-8">
@@ -274,7 +275,7 @@
                     <ul class="pr-12 xl:flex items-center h-full hidden">
                         <li
                             class="hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm text-indigo-700 tracking-normal border-b-2 border-indigo-700">
-                            <a href="javascript:void(0)"> Dashboard</a>
+                            <a href="{{ route('dashboard') }}"> Dashboard</a>
                         </li>
                         <li
                             class="hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm text-gry-800 mx-10 tracking-normal">
