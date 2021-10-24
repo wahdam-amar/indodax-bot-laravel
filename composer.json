@@ -15,8 +15,7 @@
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.7",
         "spatie/laravel-menu": "^3.7",
-        "spatie/laravel-permission": "^4.2",
-        "ext-gd": "*"
+        "spatie/laravel-permission": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
