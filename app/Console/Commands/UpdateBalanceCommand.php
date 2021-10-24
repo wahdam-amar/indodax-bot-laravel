@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Models\Balance;
+use App\Models\Order;
 use App\Services\Indodax;
 use Illuminate\Console\Command;
 
@@ -45,10 +46,14 @@ class UpdateBalanceCommand extends Command
         })->get();
 
         foreach ($userWithApi as $user) {
-            $balance = (new Indodax())->setUser($user)->getSaldoIdr();
-            Balance::create([
+            Order::create([
                 'user_id' => $user->id,
-                'amount'  => (int) str_replace(',', '', $balance)
+                'coin' => 'from command',
+                'amount' => $user->id,
+                'price_buy' => $user->id,
+                'price_sell' => $user->id,
+                'profit' => $user->id,
+                'status' => 1,
             ]);
 
             $this->info($user->name);

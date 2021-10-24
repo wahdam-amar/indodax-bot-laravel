@@ -31,7 +31,7 @@ class SchedulerDaemon extends Command
     public function handle()
     {
         while (true) {
-            $this->info('Calling scheduler');
+            $this->info('Calling scheduler from daemon');
 
             $this->call('schedule:run');
 
