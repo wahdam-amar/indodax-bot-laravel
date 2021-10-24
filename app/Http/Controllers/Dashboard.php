@@ -10,7 +10,9 @@ class Dashboard extends Controller
     public function main()
     {
         $openOrders = indodax()->openOrders();
-        $indicators = (new Indicators)->get();
+
+        // $eth = indodax()->getCoinPrice('eth');
+        // $createOrder = indodax()->makeOrder('eth_idr', $eth, 50000);
 
         return view('asset')->with('orders', $openOrders);
     }
