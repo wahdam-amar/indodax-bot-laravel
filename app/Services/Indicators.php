@@ -35,8 +35,7 @@ class Indicators
                 "indicators" => array(
                     (object) array(
                         // Relative Strength Index
-                        "indicator" => "rsi",
-                        "backtracks" => "5"
+                        "indicator" => "rsi"
                     ),
                     (object) array(
                         // Chaikin Money Flow
