@@ -47,13 +47,17 @@ class Indodax
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
     }
 
-    private function tradeRequest($method, $pair, $data = [])
+    private function tradeRequest($method, $data = [])
     {
-        $data = [
-            'method' => $method,
-            'pair'  => $pair,
-            'nonce'  => time()
-        ];
+        $data = array_merge($data, array('method' => $method));
+
+        if (!array_key_exists('nonce', $data)) {
+            Log::warning('tidak ada');
+            $data = array_merge($data, array('nonce' => time()));
+        }
+
+        debug($data);
+
         $data = http_build_query($data, '', '&');
         $headers = [
             'Sign: ' . hash_hmac('sha512', $data, $this->secret),
@@ -162,6 +166,15 @@ class Indodax
         return $self->getResponse();
     }
 
+    public function makeOrder(String $pair, int $price, int $idr, String $type = 'buy')
+    {
+        $method = 'trade';
+        $self = new self;
+        $self->setUser($this->user);
+        $self->tradeRequest('trade', compact('pair', 'type', 'price', 'idr'));
+        return $self->getResponse();
+    }
+
     /**
      * Set request to get last price of BTC/IDR
      * @return StdClass             Last Price of BTC/wIDR
@@ -180,6 +193,7 @@ class Indodax
     public function getCoinPrice($name, $amount = 1)
     {
         $self = new self;
+        // $self->setUser($this->user);
         $self->url = config('indodax.ticker_url') . $name . '_idr/ticker';
         return $self->getResponse()->ticker->last * $amount;
     }
