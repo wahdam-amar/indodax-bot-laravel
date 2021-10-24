@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\Indicators;
+use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Controller
 {
@@ -11,8 +12,10 @@ class Dashboard extends Controller
     {
         $openOrders = indodax()->openOrders();
 
-        // $eth = indodax()->getCoinPrice('eth');
-        // $createOrder = indodax()->makeOrder('eth_idr', $eth, 50000);
+        $users = DB::table('macd')->get();
+
+        debug($users);
+
 
         return view('asset')->with('orders', $openOrders);
     }

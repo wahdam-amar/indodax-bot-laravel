@@ -2,11 +2,18 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class CreateSignalJob
+class CreateSignalJob implements ShouldQueue
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -25,18 +32,22 @@ class CreateSignalJob
      */
     public function handle()
     {
-        $signal = (new \App\Services\Indicators)
+        $signals = (new \App\Services\Indicators)
             ->symbol('ETH/USDT')
             ->interval('15m')->get()
             ->firstWhere('id', 'macd');
 
-        if ($signal) {
-            \Illuminate\Support\Facades\DB::table('macd')->insert([
+        $signal = optional($signals)->result;
+
+        try {
+            DB::table('macd')->insert([
                 'value' => $signal->valueMACD,
                 'signal' => $signal->valueMACDSignal,
                 'hist' => $signal->valueMACDHist,
                 'crossover' => $signal->valueMACD > $signal->valueMACDSignal ? 'Y' : 'N',
             ]);
+        } catch (\Throwable $th) {
+            Log::info('Error Create Signal: ' . $th);
         }
     }
 }
