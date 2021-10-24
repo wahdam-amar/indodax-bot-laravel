@@ -13,7 +13,8 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
-                    @forelse ( $orders as $key => $order)
+                    @forelse ( $orders as $parent => $order)
+                    @foreach ($order as $key => $list)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">
@@ -32,7 +33,7 @@
                                         <circle cx="24" cy="24" r="4" fill="#80deea"></circle>
                                     </svg>
                                 </div>
-                                <span class="font-medium">{{ coinName($key) }}</span>
+                                <span class="font-medium">{{ coinName($parent) }}</span>
                             </div>
                         </td>
                         <td class="py-3 px-6 text-left">
@@ -81,6 +82,7 @@
                             </div>
                         </td>
                     </tr>
+                    @endforeach
                     @empty
                     <span>You Have No Order Yet</span>
                     @endforelse
