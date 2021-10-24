@@ -12,11 +12,6 @@ class Dashboard extends Controller
     {
         $openOrders = indodax()->openOrders();
 
-        $users = DB::table('macd')->get();
-
-        debug($users);
-
-
         return view('asset')->with('orders', $openOrders);
     }
 }
