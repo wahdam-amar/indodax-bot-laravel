@@ -34,7 +34,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new UpdateBalanceJob)->hourly();
         $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'));
-        $schedule->command('balance:update')->everyMinute();
     }
 
     /**
