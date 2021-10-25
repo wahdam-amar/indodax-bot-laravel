@@ -45,6 +45,7 @@ class CreateSignalJob implements ShouldQueue
                 'signal' => $signal->valueMACDSignal,
                 'hist' => $signal->valueMACDHist,
                 'crossover' => $signal->valueMACD > $signal->valueMACDSignal ? '1' : '0',
+                'created_at' => now()
             ]);
         } catch (\Throwable $th) {
             Log::info('Error Create Signal: ' . $th);
