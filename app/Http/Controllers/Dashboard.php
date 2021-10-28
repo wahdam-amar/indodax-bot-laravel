@@ -13,8 +13,6 @@ class Dashboard extends Controller
 
         // debug(indodax()->hasOrders('eth'));
 
-        MakeOrder::dispatch();
-
         // debug($macd->slice(0, 1)[0]->crossover);
 
         // debug(indodax()->makeOrder('eth_idr', 55000, 55000)->return->order_id);
