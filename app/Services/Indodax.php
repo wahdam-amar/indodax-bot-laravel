@@ -154,7 +154,7 @@ class Indodax
     public function hasOrders(String $Coin): bool
     {
         $coinName = $Coin . '_idr';
-        return collect($this->openOrders()->$coinName)->contains('type', '=', 'buy');
+        return collect(optional($this->openOrders())->$coinName)->contains('type', '=', 'buy');
     }
 
 

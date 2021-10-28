@@ -34,7 +34,12 @@ class MakeOrder implements ShouldQueue
     {
         $macd = DB::table('macd')->latest()->take(3)->get();
 
-        $placeOrder = $macd->slice(0, 1)[0]->crossover == 1 && $macd->slice(1, 1)[0]->crossover = 0 && $macd->slice(2, 1)[0]->crossover;
+        $first = collect($macd->slice(0, 1))->first()->crossover;
+        $second = collect($macd->slice(1, 1))->first()->crossover;
+        $third = collect($macd->slice(2, 1))->first()->crossover;
+
+
+        $placeOrder = $first == 1 && $second == 0 && $third == 0;
 
         $hasOrder = indodax(5)->hasOrders('eth');
 

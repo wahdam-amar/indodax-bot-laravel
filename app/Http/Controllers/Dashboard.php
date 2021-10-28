@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\MakeOrder;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Controller
@@ -12,9 +13,7 @@ class Dashboard extends Controller
 
         // debug(indodax()->hasOrders('eth'));
 
-        // $macd = DB::table('macd')->latest()->take(3)->get();
-
-        // debug($macd);
+        MakeOrder::dispatch();
 
         // debug($macd->slice(0, 1)[0]->crossover);
 
