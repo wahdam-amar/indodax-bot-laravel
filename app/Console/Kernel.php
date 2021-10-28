@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Models\Order;
+use App\Jobs\MakeOrder;
 use App\Services\Indodax;
 use App\Jobs\PruneSignalJob;
 use App\Services\Indicators;
@@ -35,7 +36,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new UpdateBalanceJob)->hourly();
         $schedule->job(new PruneSignalJob)->daily();
-        $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'));
+        $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'))->after(function () {
+            MakeOrder::dispatch();
+        });
     }
 
     /**

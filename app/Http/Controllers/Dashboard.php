@@ -18,7 +18,7 @@ class Dashboard extends Controller
 
         // debug($macd->slice(0, 1)[0]->crossover);
 
-        debug(indodax()->makeOrder('eth_idr', 55000, 55000)->return->order_id);
+        // debug(indodax()->makeOrder('eth_idr', 55000, 55000)->return->order_id);
 
         return view('asset')->with('orders', $openOrders);
     }
