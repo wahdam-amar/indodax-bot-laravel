@@ -2,9 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use App\Models\Order;
+use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,27 +41,36 @@ class MakeOrder implements ShouldQueue
         $second = collect($macd->slice(1, 1))->first()->crossover;
         $third = collect($macd->slice(2, 1))->first()->crossover;
 
-
         $placeOrder = $first == 1 && $second == 0 && $third == 0;
 
-        $hasOrder = indodax(5)->hasOrders('eth');
+        $userWithApi = User::whereHas('api', function ($api) {
+            $api->whereNotNull(['api_key', 'secret_key']);
+        })->get();
 
-        $price = indodax(5)->getCoinPrice('eth');
+        try {
+            foreach ($userWithApi as $user) {
+                // $balance = (new Indodax())->setUser($user)->getSaldoIdr();
+                // $hasOrder = (new Indodax())->setUser($user)->hasOrders('eth');
+                $price = (new Indodax())->setUser($user)->getCoinPrice('eth');
 
-        if ($placeOrder) {
-            Order::create([
-                'type'  => 'buy',
-                'status' => '0',
-                'amount' => '500000',
-                'target' => $price + ($price * 0.01),
-                'coin'  =>  'ETH',
-                'user_id'   => 5,
-                'price'    => $price,
-                'price_buy' => $price,
-                'price_sell'    => $price + ($price * 0.01),
-                'profit' => '',
-                'indodax_id' => ''
-            ]);
+                if ($placeOrder) {
+                    Order::create([
+                        'type'  => 'buy',
+                        'status' => '0',
+                        'amount' => '500000',
+                        'target' => $price + ($price * 0.01),
+                        'coin'  =>  'ETH',
+                        'user_id'   => 5,
+                        'price'    => $price,
+                        'price_buy' => $price,
+                        'price_sell'    => $price + ($price * 0.01),
+                        'profit' => '',
+                        'indodax_id' => ''
+                    ]);
+                }
+            }
+        } catch (\Throwable $th) {
+            Log::warning('Error make order : ' . $th);
         }
     }
 }
