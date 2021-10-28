@@ -142,7 +142,6 @@ class Indodax
      * Get all open orders
      *
      * @return type
-     * @throws conditon
      **/
     public function openOrders()
     {
@@ -150,6 +149,12 @@ class Indodax
         $self->setUser($this->user);
         $self->buildRequest('openOrders');
         return $self->getResponse()->return->orders ?? null;
+    }
+
+    public function hasOrders(String $Coin): bool
+    {
+        $coinName = $Coin . '_idr';
+        return collect($this->openOrders()->$coinName)->contains('type', '=', 'buy');
     }
 
 
