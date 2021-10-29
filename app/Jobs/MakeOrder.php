@@ -58,7 +58,6 @@ class MakeOrder implements ShouldQueue
                         'type'  => 'buy',
                         'status' => '0',
                         'amount' => '500000',
-                        'target' => $price + ($price * 0.01),
                         'coin'  =>  'ETH',
                         'user_id'   => 5,
                         'price'    => $price,
