@@ -23,7 +23,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['type', 'status', 'amount', 'coin', 'user_id', 'price', 'price_buy', 'price_sell', 'profit', 'indodax_id'];
+    protected $fillable = ['type', 'status', 'amount', 'coin', 'user_id', 'price_buy', 'price_sell', 'profit', 'indodax_id'];
 
     public function user()
     {
