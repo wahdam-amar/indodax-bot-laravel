@@ -35,6 +35,10 @@ class UpdateOrdersJob implements ShouldQueue
     {
         $orders = Order::where('status', 0)->get();
 
+        if (!$orders) {
+            return;
+        }
+
         foreach ($orders as  $order) {
             $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
 
