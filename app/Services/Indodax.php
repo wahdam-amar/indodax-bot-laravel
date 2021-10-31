@@ -47,10 +47,8 @@ class Indodax
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
     }
 
-    private function tradeRequest($method, $data = [])
+    private function tradeRequest($data = [])
     {
-        $data = array_merge($data, array('method' => $method));
-
         if (!array_key_exists('nonce', $data)) {
             Log::warning('tidak ada');
             $data = array_merge($data, array('nonce' => time()));
@@ -176,7 +174,23 @@ class Indodax
         $method = 'trade';
         $self = new self;
         $self->setUser($this->user);
-        $self->tradeRequest('trade', compact('pair', 'type', 'price', 'idr'));
+
+        $data = [
+            'method' => 'trade',
+            'pair'  => $pair . '_idr',
+            'type'  => $type,
+            'price' => $price,
+        ];
+
+        if ($type == 'buy') {
+            $data = array_merge($data, array('idr' => $idr));
+        }
+
+        if ($type == 'sell') {
+            $data = array_merge($data, array($pair => $idr));
+        }
+
+        $self->tradeRequest($data);
         return $self->getResponse();
     }
 
@@ -201,6 +215,11 @@ class Indodax
         // $self->setUser($this->user);
         $self->url = config('indodax.ticker_url') . $name . '_idr/ticker';
         return $self->getResponse()->ticker->last * $amount;
+    }
+
+    public function getAvailableCoin(String $coin)
+    {
+        return optional($this->info())->return->balance->$coin;
     }
 
     /**

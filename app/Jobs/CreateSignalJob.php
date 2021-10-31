@@ -34,17 +34,24 @@ class CreateSignalJob implements ShouldQueue
     {
         $signals = (new \App\Services\Indicators)
             ->symbol('ETH/USDT')
-            ->interval('15m')->get()
-            ->firstWhere('id', 'macd');
+            ->interval('15m')->get();
 
-        $signal = optional($signals)->result;
+        $rsi = $signals->firstWhere('id', 'rsi');
+        $rsi = optional($rsi)->result->value;
+
+        if ($rsi >= 60) {
+            return;
+        }
+
+        $macd = $signals->firstWhere('id', 'macd');
+        $macd = optional($macd)->result;
 
         try {
             DB::table('macd')->insert([
-                'value' => $signal->valueMACD,
-                'signal' => $signal->valueMACDSignal,
-                'hist' => $signal->valueMACDHist,
-                'crossover' => $signal->valueMACD > $signal->valueMACDSignal ? '1' : '0',
+                'value' => $macd->valueMACD,
+                'signal' => $macd->valueMACDSignal,
+                'hist' => $macd->valueMACDHist,
+                'crossover' => $macd->valueMACD > $macd->valueMACDSignal ? '1' : '0',
                 'created_at' => now()
             ]);
             Log::info('Signal created : ' . now());

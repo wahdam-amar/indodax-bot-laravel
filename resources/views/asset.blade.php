@@ -2,6 +2,8 @@
     {{-- Stats:: Start --}}
     <div class="w-full">
         <div class="bg-white shadow-md rounded my-6">
+
+            @if (!empty($orders))
             <table class="min-w-max w-full table-auto">
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -88,6 +90,7 @@
                     @endforelse
                 </tbody>
             </table>
+            @endif
         </div>
     </div>
     {{-- Stats:: End --}}

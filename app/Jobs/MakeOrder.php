@@ -49,8 +49,14 @@ class MakeOrder implements ShouldQueue
 
         try {
             foreach ($userWithApi as $user) {
-                // $balance = (new Indodax())->setUser($user)->getSaldoIdr();
-                // $hasOrder = (new Indodax())->setUser($user)->hasOrders('eth');
+
+                $hasOrder = (new Indodax())->setUser($user->id)->hasOrders('eth');
+
+                if ($hasOrder) {
+                    Log::warning($user->id . ' still have pending order');
+                    return;
+                }
+
                 $price = (new Indodax())->setUser($user)->getCoinPrice('eth');
 
                 if ($placeOrder) {
@@ -59,7 +65,7 @@ class MakeOrder implements ShouldQueue
                         'status' => '0',
                         'amount' => '500000',
                         'coin'  =>  'ETH',
-                        'user_id'   => 5,
+                        'user_id'   => $user->id,
                         'price_buy' => $price,
                         'price_sell'    => $price + ($price * 0.01),
                         'profit' => '',
