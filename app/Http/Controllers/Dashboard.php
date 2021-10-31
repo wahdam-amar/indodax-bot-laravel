@@ -13,9 +13,6 @@ class Dashboard extends Controller
     {
         $openOrders = indodax()->openOrders();
 
-        debug(indodax()->getAvailableCoin('ada'));
-
-
         return view('asset')->with('orders', $openOrders);
     }
 }
