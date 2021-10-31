@@ -38,6 +38,8 @@ class UpdateOrdersJob implements ShouldQueue
         foreach ($orders as  $order) {
             $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
 
+            Log::info($order->id . ' with price : ' . $order->price_sell . ', price eth now : ' . $price);
+
             if ($price > $order->price_sell) {
                 $order->status = 1;
                 $order->updated_at = now();
