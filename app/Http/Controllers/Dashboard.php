@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\MakeOrder;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Controller

@@ -9,6 +9,7 @@ use App\Jobs\PruneSignalJob;
 use App\Services\Indicators;
 use App\Jobs\CreateSignalJob;
 use App\Jobs\UpdateBalanceJob;
+use App\Jobs\UpdateOrdersJob;
 use App\Services\OrderBacktest;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new UpdateBalanceJob)->hourly();
+        $schedule->job(new UpdateOrdersJob)->everyFiveMinutes();
         $schedule->job(new PruneSignalJob)->daily();
         $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'))->after(function () {
             MakeOrder::dispatch();
