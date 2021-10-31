@@ -44,9 +44,9 @@ class UpdateOrdersJob implements ShouldQueue
                 $order->status = 1;
                 $order->updated_at = now();
                 $order->save();
-            }
 
-            Log::info($order->id . ' success updated');
+                Log::info($order->id . ' success updated');
+            }
         }
     }
 }
