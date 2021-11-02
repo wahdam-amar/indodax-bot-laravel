@@ -16,9 +16,7 @@ class OrderObserver
      */
     public function created(Order $order)
     {
-        $coin = Str::lower($order->coin) . '_idr';
-
-        $status = indodax()->setUser($order->user_id)->makeOrder($coin, $order->price_buy, $order->amount);
+        $status = indodax()->setUser($order->user_id)->makeOrder(Str::lower($order->coin), $order->price_buy, $order->amount);
 
         if ($status->success = 1) {
             $order->indodax_id = $status->return->order_id;
@@ -40,7 +38,7 @@ class OrderObserver
             return;
         }
         try {
-            $coinName = Str::lower($order->coin) . '_idr';
+            $coinName = Str::lower($order->coin);
             $coinAmount = indodax()->setUser($order->user_id)->getAvailableCoin($coinName);
             $price = indodax()->setUser($order->user_id)->getCoinPrice($coinName);
 
