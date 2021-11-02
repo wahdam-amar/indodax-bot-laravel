@@ -13,6 +13,8 @@ class Dashboard extends Controller
     {
         $openOrders = indodax()->openOrders();
 
+        // Should add more data
+
         return view('asset')->with('orders', $openOrders);
     }
 }
