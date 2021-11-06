@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Jobs\MakeOrder;
-use App\Services\Indodax;
-use Illuminate\Support\Facades\DB;
+
+use App\Services\Account\LiveAccount;
+
 
 class Dashboard extends Controller
 {
     public function main()
     {
-        $openOrders = indodax()->openOrders();
+        $account = new LiveAccount(auth()->id());
 
-        // Should add more data
+        $order = $account->putOrder('eth', '500000', '500000');
+
+        if ($order) {
+            debug($order);
+        } else {
+            debug('error');
+        }
+
+        $openOrders = indodax()->openOrders();
 
         return view('asset')->with('orders', $openOrders);
     }

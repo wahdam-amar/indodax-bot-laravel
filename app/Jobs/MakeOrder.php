@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Services\Account\LiveAccount;
 use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
@@ -50,28 +51,12 @@ class MakeOrder implements ShouldQueue
         try {
             foreach ($userWithApi as $user) {
 
-                $hasOrder = (new Indodax())->setUser($user->id)->hasOrders('eth');
-
-                if ($hasOrder) {
-                    Log::warning($user->id . ' still have pending order');
-                    return;
-                }
-
                 $price = (new Indodax())->setUser($user->id)->getCoinPrice('eth');
-                $status = indodax()->setUser($user->id)->makeOrder('eth', $price, '500000');
+
+                $account = new LiveAccount($user->id);
 
                 if ($placeOrder) {
-                    Order::create([
-                        'type'  => 'buy',
-                        'status' => '0',
-                        'amount' => '500000',
-                        'coin'  =>  'ETH',
-                        'user_id'   => $user->id,
-                        'price_buy' => $price,
-                        'price_sell'    => $price + ($price * 0.01),
-                        'profit' => '',
-                        'indodax_id' => optional($status)->return->order_id
-                    ]);
+                    $account->putOrder('eth', $price, '500000');
                 }
             }
         } catch (\Throwable $th) {

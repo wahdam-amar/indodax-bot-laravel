@@ -2,16 +2,19 @@
 
 namespace App\Services\Account;
 
-use App\Services\Indodax;
-use App\Interfaces\OrderInterface;
 use App\Models\User;
+use App\Models\Order;
+use App\Services\Indodax;
+use Illuminate\Support\Optional;
+use App\Interfaces\OrderInterface;
 
 class LiveAccount implements OrderInterface
 {
     private $app;
 
-    public function __construct(User $user)
+    public function __construct($user)
     {
+        $this->user = $user;
         $this->app = (new Indodax())->setUser($user);
     }
 
@@ -30,11 +33,35 @@ class LiveAccount implements OrderInterface
         // Todo: get all of sucessful orders
     }
 
-    public function putOrder()
+    public function putOrder(String $pair, String $price, String $amount, String $type = 'buy')
     {
-        // Todo: make order
+        if ($this->hasOrders($pair, $type)) {
+            return;
+        }
 
+        sleep(1);
+
+        $order = $this->app->makeOrder($pair, $price, $amount, $type)->return->order_id ?? null;
+
+        if (!$order) {
+            return $order;
+        }
+
+        Order::create([
+            'type'  => $type,
+            'status' => '0',
+            'amount' => $amount,
+            'coin'  =>  $pair,
+            'user_id'   => $this->user,
+            'price_buy' => $price,
+            'price_sell'    => $price + ($price * 0.01),
+            'profit' => '',
+            'indodax_id' => $order
+        ]);
+
+        return $order;
     }
+
 
     public function cancelOrder($pair, $order_id, $type = 'buy')
     {
