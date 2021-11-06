@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Throwable;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class Indodax
@@ -149,10 +150,37 @@ class Indodax
         return $self->getResponse()->return->orders ?? null;
     }
 
-    public function hasOrders(String $Coin): bool
+    /**
+     * Cancel order
+     *
+     * @return type
+     **/
+    public function cancelOrder($pair, $order_id, $type = 'buy')
     {
-        $coinName = $Coin . '_idr';
-        return collect(optional($this->openOrders())->$coinName)->contains('type', '=', 'buy');
+        $self = new self;
+        $self->setUser($this->user);
+        $pair = Str::contains($pair, '_idr') ? $pair : $pair . '_idr';
+        $data = [
+            'method'    => 'cancelOrder',
+            'pair'  => $pair,
+            'order_id' => $order_id,
+            'type'  => $type
+        ];
+        $self->tradeRequest($data);
+        return $self->getResponse()->return ?? null;
+    }
+
+    /**
+     * Check if user has any orders
+     * @param String $Coin  Coin pair to check
+     * @param String $Type  Type to check
+     * @return Boolean True if user has any order, false if not
+     */
+    public function hasOrders(String $Coin, String $type = 'buy'): bool
+    {
+        $coinName = Str::contains($Coin, '_idr') ? $Coin : $Coin . '_idr';
+
+        return collect(optional($this->openOrders())->$coinName)->contains('type', '=', $type);
     }
 
 

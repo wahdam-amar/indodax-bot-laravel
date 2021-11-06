@@ -57,10 +57,11 @@ class MakeOrder implements ShouldQueue
                     return;
                 }
 
-                $price = (new Indodax())->setUser($user)->getCoinPrice('eth');
+                $price = (new Indodax())->setUser($user->id)->getCoinPrice('eth');
+                $status = indodax()->setUser($user->id)->makeOrder('eth', $price, '500000');
 
                 if ($placeOrder) {
-                    $order = Order::create([
+                    Order::create([
                         'type'  => 'buy',
                         'status' => '0',
                         'amount' => '500000',
@@ -69,17 +70,8 @@ class MakeOrder implements ShouldQueue
                         'price_buy' => $price,
                         'price_sell'    => $price + ($price * 0.01),
                         'profit' => '',
-                        'indodax_id' => ''
+                        'indodax_id' => optional($status)->return->order_id
                     ]);
-
-                    $status = indodax()->setUser($user)->makeOrder('eth', $price, '500000');
-
-                    if ($status->success = 1) {
-                        $order->indodax_id = $status->return->order_id;
-                        $order->save();
-                    }
-
-                    Log::info('Order created event ' . $order->id . ' is created');
                 }
             }
         } catch (\Throwable $th) {

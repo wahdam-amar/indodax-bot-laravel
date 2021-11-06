@@ -36,7 +36,8 @@ class UpdateOrdersJob implements ShouldQueue
     {
         $orders = Order::where('status', 0)->get();
 
-        if (!$orders) {
+        // return if no orders
+        if ($orders->isEmpty()) {
             return;
         }
 
