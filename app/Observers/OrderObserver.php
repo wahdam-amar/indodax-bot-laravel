@@ -16,7 +16,6 @@ class OrderObserver
      */
     public function created(Order $order)
     {
-        Log::info('Order created event ' . $order->id . ' is created');
     }
 
     /**
