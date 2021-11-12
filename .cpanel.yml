@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/u3142581/public_html/
-    - /bin/cp -R /home/u3142581/repositories/indodax-bot-laravel $DEPLOYPATH
+    - /bin/cp -R /home/u3142581/repositories/indodax-bot-laravel/ $DEPLOYPATH
