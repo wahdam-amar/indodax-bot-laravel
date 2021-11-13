@@ -8,11 +8,12 @@ use App\Services\Indodax;
 use App\Jobs\PruneSignalJob;
 use App\Services\Indicators;
 use App\Jobs\CreateSignalJob;
-use App\Jobs\UpdateBalanceJob;
 use App\Jobs\UpdateOrdersJob;
+use App\Jobs\UpdateBalanceJob;
 use App\Services\OrderBacktest;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -41,6 +42,10 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'))->after(function () {
             MakeOrder::dispatch();
         });
+
+        $schedule->call(function () {
+            Log::info('Cronjob berhasil dijalankan');
+        })->everyMinute();
     }
 
     /**
