@@ -42,10 +42,6 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'))->after(function () {
             MakeOrder::dispatch();
         });
-
-        $schedule->call(function () {
-            Log::info('Cronjob berhasil dijalankan');
-        })->everyMinute();
     }
 
     /**
