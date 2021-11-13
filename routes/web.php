@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\TestMenu;
+
 use App\Http\Controllers\Dashboard;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BacktestController;
+use App\Http\Controllers\UserSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,8 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [Dashboard::class, 'main'])->name('dashboard');
     Route::resource('backtest', BacktestController::class);
-    Route::view('profile', 'profile.index')->name('profile');
+    // Route::view('profile', 'profile.index')->name('profile');
+    Route::resource('profile', UserSettingController::class)->only(['index', 'update'])->names('profile');
 });
 
 
