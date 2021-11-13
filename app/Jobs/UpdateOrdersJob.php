@@ -36,15 +36,15 @@ class UpdateOrdersJob implements ShouldQueue
     {
         $orders = Order::where('status', 0)->get();
 
-        // return if no orders
         if ($orders->isEmpty()) {
             return;
         }
 
         foreach ($orders as  $order) {
-            $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
 
-            Log::info($order->id . ' with price : ' . $order->price_sell . ', price eth now : ' . $price);
+            $indodax = indodax()->setUser($order->user_id);
+
+            $price = $indodax->getCoinPrice($order->coin);
 
             if ($price > $order->price_sell) {
 
@@ -54,15 +54,17 @@ class UpdateOrdersJob implements ShouldQueue
 
                 try {
                     $coinName = Str::lower($order->coin);
-                    $coinAmount = indodax()->setUser($order->user_id)->getAvailableCoin($coinName);
-                    $price = indodax()->setUser($order->user_id)->getCoinPrice($coinName);
 
-                    indodax()->setUser($order->user_id)->makeOrder($coinName, $price, $coinAmount, 'sell');
+                    $coinAmount = $indodax->getAvailableCoin($coinName);
+
+                    $price = $indodax->getCoinPrice($coinName);
+
+                    $result = $indodax->makeOrder($coinName, $price, $coinAmount, 'sell');
+
+                    Log::info('Result UpdateOrdersJob' . $result->success . ' ' . $result->error);
                 } catch (\Throwable $th) {
-                    Log::error('Error sell ' . $order . ' ' . $th);
+                    Log::error('Error sell ' . $th->getMessage());
                 }
-
-                Log::info($order->id . ' success updated');
             }
         }
     }

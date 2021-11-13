@@ -51,17 +51,16 @@ class Indodax
     private function tradeRequest($data = [])
     {
         if (!array_key_exists('nonce', $data)) {
-            Log::warning('tidak ada');
             $data = array_merge($data, array('nonce' => time()));
         }
 
-        debug($data);
-
         $data = http_build_query($data, '', '&');
+
         $headers = [
             'Sign: ' . hash_hmac('sha512', $data, $this->secret),
             'Key: '  . $this->key,
         ];
+
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
     }
@@ -206,13 +205,12 @@ class Indodax
 
     public function makeOrder(String $pair, int $price, int $idr, String $type = 'buy')
     {
-        $method = 'trade';
         $self = new self;
         $self->setUser($this->user);
 
         $data = [
             'method' => 'trade',
-            'pair'  => $pair . '_idr',
+            'pair'  => $this->formatPair($pair),
             'type'  => $type,
             'price' => $price,
         ];
@@ -247,8 +245,8 @@ class Indodax
     public function getCoinPrice($name, $amount = 1)
     {
         $self = new self;
-        // $self->setUser($this->user);
-        $self->url = config('indodax.ticker_url') . $name . '_idr/ticker';
+        $self->setUser($this->user);
+        $self->url = config('indodax.ticker_url') . $this->formatPair($name) . '/ticker';
         return $self->getResponse()->ticker->last * $amount;
     }
 
@@ -287,6 +285,11 @@ class Indodax
         $self = new self;
         $self->url = config('indodax.ticker_url') . 'pairs';
         return $self->getResponse();
+    }
+
+    public function formatPair($pair)
+    {
+        return $pair = Str::contains($pair, '_idr') ? $pair : $pair . '_idr';
     }
 
     /**
