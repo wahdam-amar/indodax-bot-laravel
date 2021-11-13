@@ -38,6 +38,10 @@ class MakeOrder implements ShouldQueue
     {
         $macd = DB::table('macd')->latest()->take(3)->get();
 
+        if ($macd->count() < 3) {
+            return;
+        }
+
         $first = collect($macd->slice(0, 1))->first()->crossover;
         $second = collect($macd->slice(1, 1))->first()->crossover;
         $third = collect($macd->slice(2, 1))->first()->crossover;
