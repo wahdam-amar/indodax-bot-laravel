@@ -193,7 +193,14 @@ class Indodax
     public function orderDetails($order_id, $pair = 'btc_idr')
     {
         $self = new self;
-        $self->buildRequest('getOrder', compact('pair', 'order_id'));
+        $self->setUser($this->user);
+        $pair = Str::contains($pair, '_idr') ? $pair : $pair . '_idr';
+        $data = [
+            'method'    => 'getOrder',
+            'pair'  => $pair,
+            'order_id' => $order_id
+        ];
+        $self->tradeRequest($data);
         return $self->getResponse();
     }
 
