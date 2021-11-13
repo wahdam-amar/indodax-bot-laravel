@@ -1,0 +1,30 @@
+# GithHub Actions Workflow generated with Ghygen
+# Original configuration: https://ghygen.hi-folks.dev?code=fc3b529dfc5a8a6764eeba4300a0b1ad
+name: Template - Laravel application (Mysql)
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - features/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    # Service container Mysql mysql
+    services:
+      # Label used to access the service container
+      mysql:
+        # Docker Hub image (also with version)
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: base
+        ## map the "external" 33306 port with the "internal" 3306
+        ports:
+          - 33306:3306
+        # Set health checks to wait until mysql database has started (it takes some
