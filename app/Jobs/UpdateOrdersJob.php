@@ -51,6 +51,8 @@ class UpdateOrdersJob implements ShouldQueue
 
             $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
 
+            Log::info('Price: ' . $price, ['check' => $price > $order->price_sell]);
+
             if ($price > $order->price_sell) {
 
                 $order->status = 1;
@@ -61,8 +63,6 @@ class UpdateOrdersJob implements ShouldQueue
                     $coinName = Str::lower($order->coin);
 
                     $coinAmount = (new Indodax())->setUser($order->user_id)->getAvailableCoin($coinName);
-
-                    $price = (new Indodax())->setUser($order->user_id)->getCoinPrice($coinName);
 
                     $result = $account->putOrder($coinName, $price, $coinAmount, 'sell');
 

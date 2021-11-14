@@ -305,14 +305,6 @@ class Indodax
             $this->user = $user;
         }
 
-        $log = [
-            'user' => $user,
-            'is int' => is_int($user),
-            'user' => $this->user,
-        ];
-
-        Log::info('Set user' . json_encode($log));
-
         if ($this->user->api()->exists()) {
             $this->user->load('api');
             $this->key    = $this->user->api->api_key;
