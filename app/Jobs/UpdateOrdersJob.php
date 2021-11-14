@@ -44,7 +44,7 @@ class UpdateOrdersJob implements ShouldQueue
 
         foreach ($orders as  $order) {
 
-            Log::info('Updating order ' . $order->id);
+            Log::info('Updating order ' . $order->user_id);
 
             $indodax = (new Indodax())->setUser($order->user_id);
 
