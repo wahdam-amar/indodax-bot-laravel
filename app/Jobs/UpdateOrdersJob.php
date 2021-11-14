@@ -40,9 +40,13 @@ class UpdateOrdersJob implements ShouldQueue
             return;
         }
 
+        Log::info('Found ' . $orders->count() . ' orders to update');
+
         foreach ($orders as  $order) {
 
-            $indodax = indodax()->setUser((int) $order->user_id);
+            Log::info('Updating order ' . $order->id);
+
+            $indodax = (new Indodax())->setUser($order->user_id);
 
             $price = $indodax->getCoinPrice($order->coin);
 
