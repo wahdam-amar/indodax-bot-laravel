@@ -7,6 +7,7 @@ use App\Services\Indodax;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
+use App\Services\Account\LiveAccount;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,9 +47,9 @@ class UpdateOrdersJob implements ShouldQueue
 
             Log::info('Updating order ' . $order->user_id);
 
-            $indodax = (new Indodax())->setUser($order->user_id);
+            $account = new LiveAccount($order->user_id);
 
-            $price = $indodax->getCoinPrice($order->coin);
+            $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
 
             if ($price > $order->price_sell) {
 
@@ -59,11 +60,11 @@ class UpdateOrdersJob implements ShouldQueue
                 try {
                     $coinName = Str::lower($order->coin);
 
-                    $coinAmount = $indodax->getAvailableCoin($coinName);
+                    $coinAmount = (new Indodax())->setUser($order->user_id)->getAvailableCoin($coinName);
 
-                    $price = $indodax->getCoinPrice($coinName);
+                    $price = (new Indodax())->setUser($order->user_id)->getCoinPrice($coinName);
 
-                    $result = $indodax->makeOrder($coinName, $price, $coinAmount, 'sell');
+                    $result = $account->putOrder($coinName, $price, $coinAmount, 'sell');
 
                     Log::info('Result UpdateOrdersJob' . $result->success . ' ' . $result->error);
                 } catch (\Throwable $th) {
