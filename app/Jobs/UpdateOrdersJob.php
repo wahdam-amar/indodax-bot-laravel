@@ -42,7 +42,7 @@ class UpdateOrdersJob implements ShouldQueue
 
         foreach ($orders as  $order) {
 
-            $indodax = indodax()->setUser($order->user_id);
+            $indodax = indodax()->setUser((int) $order->user_id);
 
             $price = $indodax->getCoinPrice($order->coin);
 
