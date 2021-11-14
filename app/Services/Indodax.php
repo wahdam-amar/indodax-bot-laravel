@@ -311,7 +311,7 @@ class Indodax
             'user' => $this->user,
         ];
 
-        Log::info('Set user' . $log);
+        Log::info('Set user' . json_encode($log));
 
         if ($this->user->api()->exists()) {
             $this->user->load('api');
