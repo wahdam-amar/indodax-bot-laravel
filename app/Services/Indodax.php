@@ -305,6 +305,8 @@ class Indodax
             $this->user = $user;
         }
 
+        Log::info('User set to ' . $this->user->username);
+
         if ($this->user->api()->exists()) {
             $this->user->load('api');
             $this->key    = $this->user->api->api_key;
