@@ -157,15 +157,20 @@ class Indodax
     public function cancelOrder($pair, $order_id, $type = 'buy')
     {
         $self = new self;
+
         $self->setUser($this->user);
-        $pair = Str::contains($pair, '_idr') ? $pair : $pair . '_idr';
+
+        $pair = $this->formatPair($pair);
+
         $data = [
             'method'    => 'cancelOrder',
             'pair'  => $pair,
             'order_id' => $order_id,
             'type'  => $type
         ];
+
         $self->tradeRequest($data);
+
         return $self->getResponse()->return ?? null;
     }
 
