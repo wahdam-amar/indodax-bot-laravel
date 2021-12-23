@@ -32,7 +32,7 @@ class CreateSignalJob implements ShouldQueue
      */
     public function handle()
     {
-        $signals = (new \App\Services\Indicators)
+        $signals = indicator()
             ->symbol('ETH/USDT')
             ->interval('15m')->get();
 
