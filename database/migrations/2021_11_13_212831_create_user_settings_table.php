@@ -16,8 +16,9 @@ class CreateUserSettingsTable extends Migration
         Schema::create('user_settings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->tinyInteger('take_profit')->default(1.5);
-            $table->tinyInteger('stop_loss')->default(1.5);
+            $table->string('take_profit')->default(1.5);
+            $table->string('stop_loss')->default(1.5);
+            $table->unsignedBigInteger('amount_trade');
             $table->timestamps();
         });
     }

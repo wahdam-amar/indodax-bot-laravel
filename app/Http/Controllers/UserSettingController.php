@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserSettingRequest;
 use App\Models\Api;
 use App\Models\UserSetting;
 use Illuminate\Http\Request;
@@ -16,9 +17,11 @@ class UserSettingController extends Controller
     public function index()
     {
         $userApi = Api::where('user_id', auth()->user()->id)->first();
+        $userSetting = UserSetting::where('user_id', auth()->user()->id)->first();
 
         return view('profile.index')
-            ->with('userApi', $userApi);
+            ->with('userApi', $userApi)
+            ->with('userSetting', $userSetting);
     }
 
     /**
@@ -71,9 +74,39 @@ class UserSettingController extends Controller
      * @param  \App\Models\UserSetting  $userSetting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserSetting $userSetting)
+    public function update(UserSettingRequest $request, UserSetting $userSetting)
     {
-        //
+
+        // dd($request->all());
+
+        $userApi = Api::updateOrCreate(
+            [
+                'user_id'   => auth()->user()->id,
+            ],
+            [
+                'user_id' => auth()->user()->id,
+                'api_key' => $request->api_key,
+                'secret_key' => $request->secret_key
+            ]
+        );
+
+        $userSetting = UserSetting::updateOrCreate(
+            [
+                'user_id'   => auth()->user()->id,
+            ],
+            [
+                'user_id' => auth()->user()->id,
+                'amount_trade' => $request->amount_trade,
+                'take_profit' => (string) $request->take_profit,
+                'stop_loss' => (string) $request->stop_loss
+            ]
+        );
+
+
+
+        return back()
+            ->with('userApi', $userApi)
+            ->with('userSetting', $userSetting);
     }
 
     /**

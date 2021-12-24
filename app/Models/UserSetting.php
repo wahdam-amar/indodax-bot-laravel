@@ -14,7 +14,7 @@ class UserSetting extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'take_profit', 'stop_loss'];
+    protected $fillable = ['user_id', 'take_profit', 'stop_loss', 'amount_trade'];
 
     /**
      * Get the user that owns the setting.
