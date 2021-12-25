@@ -14,5 +14,6 @@ class Signal extends Model
      *
      * @var array
      */
+
     protected $guarded = ['id'];
 }

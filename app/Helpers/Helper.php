@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Indicators;
 use App\Services\Indodax;
 
 if (!function_exists('getCalculatePercentageChange')) {
@@ -46,5 +47,17 @@ if (!function_exists('indodax')) {
         }
 
         return (new indodax)->setUser($user ?? auth()->id());
+    }
+}
+
+if (!function_exists('indicator')) {
+    /**
+     * Get indodax instance with auth user
+     *
+     * @return App\Services\Indicators
+     */
+    function indicator($signal = []): Indicators
+    {
+        return (new Indicators($signal));
     }
 }

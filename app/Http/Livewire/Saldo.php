@@ -21,7 +21,6 @@ class Saldo extends Component
         try {
             $this->balance = (new Indodax())->setUser(auth()->id())->getSaldoIdr();
         } catch (\Throwable $th) {
-            debug('Error get balance' . $th);
             $this->balance = 0;
         }
     }

@@ -7,6 +7,7 @@ use App\Services\Indodax;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
+use App\Services\Account\LiveAccount;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,11 +41,17 @@ class UpdateOrdersJob implements ShouldQueue
             return;
         }
 
+        Log::info('Found ' . $orders->count() . ' orders to update');
+
         foreach ($orders as  $order) {
 
-            $indodax = indodax()->setUser((int) $order->user_id);
+            Log::info('Updating order ' . $order->user_id);
 
-            $price = $indodax->getCoinPrice($order->coin);
+            $account = new LiveAccount($order->user_id);
+
+            $price = (new Indodax())->setUser($order->user_id)->getCoinPrice('eth');
+
+            Log::info('Price: ' . $price, ['check' => $price > $order->price_sell]);
 
             if ($price > $order->price_sell) {
 
@@ -55,11 +62,9 @@ class UpdateOrdersJob implements ShouldQueue
                 try {
                     $coinName = Str::lower($order->coin);
 
-                    $coinAmount = $indodax->getAvailableCoin($coinName);
+                    $coinAmount = (new Indodax())->setUser($order->user_id)->getAvailableCoin($coinName);
 
-                    $price = $indodax->getCoinPrice($coinName);
-
-                    $result = $indodax->makeOrder($coinName, $price, $coinAmount, 'sell');
+                    $result = $account->putOrder($coinName, $price, $coinAmount, 'sell');
 
                     Log::info('Result UpdateOrdersJob' . $result->success . ' ' . $result->error);
                 } catch (\Throwable $th) {

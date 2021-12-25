@@ -279,7 +279,7 @@
                         </li>
                         <li
                             class="hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm text-gry-800 mx-10 tracking-normal">
-                            <a href="javascript:void(0)">Products</a>
+                            <a href="javascript:void(0)">Coin</a>
                         </li>
                         <li
                             class="hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm text-gry-800 mr-10 tracking-normal">

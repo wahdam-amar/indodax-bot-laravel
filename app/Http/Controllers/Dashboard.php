@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\UpdateOrdersJob;
+use App\Signals\Rsi;
+use Illuminate\Pipeline\Pipeline;
 
 class Dashboard extends Controller
 {
     public function main()
     {
-        $indodax = indodax();
-
-        $openOrders = $indodax->openOrders();
-
-        return view('asset')->with('orders', $openOrders);
+        return view('asset');
     }
 }

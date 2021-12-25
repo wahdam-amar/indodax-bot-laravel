@@ -32,6 +32,6 @@ class PruneSignalJob implements ShouldQueue
     public function handle()
     {
 
-        DB::table('macd')->where('created_at', '<', now()->subWeek(1))->delete();
+        // DB::table('macd')->where('created_at', '<', now()->subMonth(1))->delete();
     }
 }
