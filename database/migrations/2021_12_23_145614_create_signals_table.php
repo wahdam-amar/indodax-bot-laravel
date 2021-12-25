@@ -20,11 +20,11 @@ class CreateSignalsTable extends Migration
             $table->string('macd_hist');
             $table->boolean('macd_crossover');
             $table->string('rsi_value');
-            $table->string('stoch_k');
-            $table->string('stoch_d');
+            $table->string('stoch_k')->nullable();
+            $table->string('stoch_d')->nullable();
             $table->string('market_price');
             $table->string('coin_name');
-            $table->string('via');
+            $table->string('via')->nullable();
             $table->timestamps();
         });
     }
