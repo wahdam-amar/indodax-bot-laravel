@@ -8,7 +8,6 @@ use App\Services\Indodax;
 class Saldo extends Component
 {
 
-    public $user;
     public $balance;
     public $readyToLoad = false;
 
@@ -19,12 +18,8 @@ class Saldo extends Component
 
     public function getSaldo()
     {
-        if (!$this->user->api()->exists()) {
-            $this->balance = 0;
-        }
-
         try {
-            $this->balance = (new Indodax())->setUser($this->user)->getSaldoIdr();
+            $this->balance = (new Indodax())->setUser(auth()->id())->getSaldoIdr();
         } catch (\Throwable $th) {
             $this->balance = 0;
         }
