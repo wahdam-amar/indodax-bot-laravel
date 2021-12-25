@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
+use App\Models\Signal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,21 +41,35 @@ class CreateSignalJob implements ShouldQueue
         $rsi = $signals->firstWhere('id', 'rsi');
         $rsi = optional($rsi)->result->value;
 
-        if ($rsi >= 60) {
+        if (!$rsi) {
             return;
         }
+
+        $userWithApi = User::whereHas('api', function ($api) {
+            $api->whereNotNull(['api_key', 'secret_key']);
+        })->first();
+
+        $indodax = indodax()->setUser($userWithApi);
 
         $macd = $signals->firstWhere('id', 'macd');
         $macd = optional($macd)->result;
 
+        $stoch = $signals->firstWhere('id', 'stoch');
+
         try {
-            DB::table('macd')->insert([
-                'value' => $macd->valueMACD,
-                'signal' => $macd->valueMACDSignal,
-                'hist' => $macd->valueMACDHist,
-                'crossover' => $macd->valueMACD > $macd->valueMACDSignal ? '1' : '0',
-                'created_at' => now()
-            ]);
+
+            $signal = new Signal;
+            $signal->macd_value = $macd->valueMACD;
+            $signal->macd_signal = $macd->valueMACDSignal;
+            $signal->macd_crossover = $macd->valueMACD > $macd->valueMACDSignal ? '1' : '0';
+            $signal->rsi_value = $rsi;
+            $signal->stoch_k = $stoch->result->valueK ?? null;
+            $signal->stoch_d = $stoch->result->valueD ?? null;
+            $signal->market_price = $indodax->getCoinPrice('eth');
+            $signal->coin_name = 'ETH/USDT';
+            $signal->via = 'binance';
+            $signal->save();
+
             Log::info('Signal created : ' . now());
         } catch (\Throwable $th) {
             Log::info('Error Create Signal: ' . $th);
