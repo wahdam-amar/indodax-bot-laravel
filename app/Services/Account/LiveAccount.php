@@ -12,7 +12,7 @@ class LiveAccount implements OrderInterface
 {
     private $app;
 
-    public function __construct($user)
+    public function __construct(User $user)
     {
         $this->user = $user;
         $this->app = (new Indodax())->setUser($user);
