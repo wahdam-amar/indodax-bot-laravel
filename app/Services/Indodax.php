@@ -231,8 +231,9 @@ class Indodax
      */
     public function lastBtcIdrPrice()
     {
-        $this->url = config('indodax.btc_idr_ticker_url');
-        return $this->getResponse();
+        $self = new self;
+        $self->url = config('indodax.btc_idr_ticker_url');
+        return $self->getResponse();
     }
 
     /**
@@ -241,8 +242,10 @@ class Indodax
      */
     public function getCoinPrice($name, $amount = 1)
     {
-        $this->url = config('indodax.ticker_url') . $this->formatPair($name) . '/ticker';
-        return $this->getResponse()->ticker->last * $amount;
+        $self = new self;
+        $self->setUser($this->user);
+        $self->url = config('indodax.ticker_url') . $this->formatPair($name) . '/ticker';
+        return $self->getResponse()->ticker->last * $amount;
     }
 
     public function getAvailableCoin(String $coin)
@@ -277,8 +280,9 @@ class Indodax
 
     public function pairs()
     {
-        $this->url = config('indodax.ticker_url') . 'pairs';
-        return $this->getResponse();
+        $self = new self;
+        $self->url = config('indodax.ticker_url') . 'pairs';
+        return $self->getResponse();
     }
 
     public function formatPair($pair)
