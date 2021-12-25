@@ -35,7 +35,7 @@ class LiveAccount implements OrderInterface
 
     public function putOrder(String $pair, String $price, String $amount, String $type = 'buy')
     {
-        if ($this->hasOrders($pair, $type)) {
+        if ($this->hasOrders($pair, 'buy') || $this->hasOrders($pair, 'sell')) {
             return;
         }
 
