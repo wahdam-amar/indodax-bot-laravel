@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 class Indodax
 {
-    private $key;
-    private $secret;
     private $url;
     private $curl;
     private $user;
@@ -41,8 +39,8 @@ class Indodax
         ];
         $data = http_build_query($data, '', '&');
         $headers = [
-            'Sign: ' . hash_hmac('sha512', $data, $this->secret),
-            'Key: '  . $this->key,
+            'Sign: ' . hash_hmac('sha512', $data, $this->user->api->secret_key),
+            'Key: '  . $this->user->api->api_key,
         ];
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
@@ -57,8 +55,8 @@ class Indodax
         $data = http_build_query($data, '', '&');
 
         $headers = [
-            'Sign: ' . hash_hmac('sha512', $data, $this->secret),
-            'Key: '  . $this->key,
+            'Sign: ' . hash_hmac('sha512', $data, $this->user->api->secret_key),
+            'Key: '  . $this->user->api->api_key,
         ];
 
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
@@ -304,16 +302,20 @@ class Indodax
      */
     public function setUser($user)
     {
-        if (is_int($user)) {
-            $this->user = User::find($user);
-        } else {
-            $this->user = $user;
+        if (!$user instanceof User && !is_int($user)) {
+            return;
         }
 
-        if ($this->user->api()->exists()) {
-            $this->user->load('api');
-            $this->key    = $this->user->api->api_key;
-            $this->secret = $this->user->api->secret_key;
+        if (is_int($user)) {
+            $this->user = User::with('api')->where('id', $user)->first();
+        }
+
+        if ($user instanceof User) {
+            $this->user = $user->load('api');
+        }
+
+        if (!$this->user->api) {
+            return;
         }
 
         return $this;
