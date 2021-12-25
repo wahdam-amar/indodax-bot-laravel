@@ -19,9 +19,9 @@ class CreateBacktestsTable extends Migration
             $table->string('amount');
             $table->string('time_buy');
             $table->string('price_buy');
-            $table->string('price_sell');
-            $table->string('time_sell');
-            $table->string('profit');
+            $table->string('price_sell')->nullable();
+            $table->string('time_sell')->nullable();
+            $table->string('profit')->nullable();
             $table->string('status');
             $table->string('via');
             $table->timestamps();
