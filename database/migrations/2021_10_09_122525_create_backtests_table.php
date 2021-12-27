@@ -15,8 +15,16 @@ class CreateBacktestsTable extends Migration
     {
         Schema::create('backtests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
+            $table->string('pair');
             $table->string('amount');
-            $table->string('user_id');
+            $table->string('time_buy');
+            $table->string('price_buy');
+            $table->string('price_sell')->nullable();
+            $table->string('time_sell')->nullable();
+            $table->string('profit')->nullable();
+            $table->string('status');
+            $table->string('via');
             $table->timestamps();
         });
     }

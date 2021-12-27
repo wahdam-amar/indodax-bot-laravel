@@ -5,14 +5,13 @@ namespace App\Services\Account;
 use App\Models\User;
 use App\Models\Order;
 use App\Services\Indodax;
-use Illuminate\Support\Optional;
 use App\Interfaces\OrderInterface;
 
 class LiveAccount implements OrderInterface
 {
     private $app;
 
-    public function __construct($user)
+    public function __construct(User $user)
     {
         $this->user = $user;
         $this->app = (new Indodax())->setUser($user);
@@ -35,7 +34,7 @@ class LiveAccount implements OrderInterface
 
     public function putOrder(String $pair, String $price, String $amount, String $type = 'buy')
     {
-        if ($this->hasOrders($pair, $type)) {
+        if ($this->hasOrders($pair, 'buy') || $this->hasOrders($pair, 'sell')) {
             return;
         }
 

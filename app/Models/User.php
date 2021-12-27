@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Api::class, 'user_id', 'id');
     }
+
+    public function backtest()
+    {
+        return $this->hasOne(Backtest::class);
+    }
 }

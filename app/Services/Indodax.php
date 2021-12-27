@@ -297,7 +297,6 @@ class Indodax
 
     /**
      * Set the value of user
-     *
      * @return  self
      */
     public function setUser($user)

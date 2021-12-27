@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Models\Signal;
+use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,17 +40,21 @@ class CreateSignalJob implements ShouldQueue
             ->interval('15m')->get();
 
         $rsi = $signals->firstWhere('id', 'rsi');
-        $rsi = optional($rsi)->result->value;
+        $rsi = optional($rsi)->result->value ?? null;
 
         if (!$rsi) {
+            Log::info('No RSI');
             return;
         }
 
-        $userWithApi = User::whereHas('api', function ($api) {
-            $api->whereNotNull(['api_key', 'secret_key']);
-        })->first();
+        $userWithApi = User::whereHas('api')->first();
 
-        $indodax = indodax()->setUser($userWithApi);
+        if (!$userWithApi) {
+            Log::info('No user with api');
+            return;
+        }
+
+        $indodax = (new Indodax)->setUser($userWithApi);
 
         $macd = $signals->firstWhere('id', 'macd');
         $macd = optional($macd)->result;
@@ -61,6 +66,7 @@ class CreateSignalJob implements ShouldQueue
             $signal = new Signal;
             $signal->macd_value = $macd->valueMACD;
             $signal->macd_signal = $macd->valueMACDSignal;
+            $signal->macd_hist = $macd->valueMACDHist;
             $signal->macd_crossover = $macd->valueMACD > $macd->valueMACDSignal ? '1' : '0';
             $signal->rsi_value = $rsi;
             $signal->stoch_k = $stoch->result->valueK ?? null;
