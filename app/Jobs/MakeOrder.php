@@ -3,14 +3,17 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use App\Signals\Rsi;
 use App\Models\Order;
-use App\Services\Account\LiveAccount;
+use App\Models\Backtest;
 use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\Account\LiveAccount;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Services\Account\BacktestAccount;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -36,17 +39,22 @@ class MakeOrder implements ShouldQueue
      */
     public function handle()
     {
-        $macd = DB::table('macd')->latest()->take(3)->get();
 
-        if ($macd->count() < 3) {
+        $indicators = collect();
+
+        $pipe = app(Pipeline::class)
+            ->send($indicators)
+            ->via('buy')
+            ->through([
+                Rsi::class
+            ])
+            ->then(function ($indicators) {
+                return $indicators;
+            });
+
+        if (!$pipe->get('should_buy')) {
             return;
         }
-
-        $first = collect($macd->slice(0, 1))->first()->crossover;
-        $second = collect($macd->slice(1, 1))->first()->crossover;
-        $third = collect($macd->slice(2, 1))->first()->crossover;
-
-        $placeOrder = $first == 1 && $second == 0 && $third == 0;
 
         $userWithApi = User::whereHas('api', function ($api) {
             $api->whereNotNull(['api_key', 'secret_key']);
@@ -54,17 +62,16 @@ class MakeOrder implements ShouldQueue
 
         // Todo : make backtest order
 
-
         try {
             foreach ($userWithApi as $user) {
 
                 $price = (new Indodax())->setUser($user->id)->getCoinPrice('eth');
 
-                $account = new LiveAccount($user->id);
+                $backtest = new BacktestAccount;
+                $backtest->putOrder('eth', $price, '5000000');
 
-                if ($placeOrder) {
-                    $account->putOrder('eth', $price, '500000');
-                }
+                // $account = new LiveAccount($user->id);
+                // $account->putOrder('eth', $price, '500000');
             }
         } catch (\Throwable $th) {
             Log::warning('Error make order : ' . $th);
