@@ -19,7 +19,7 @@ class BacktestAccount implements OrderInterface
     public function hasOrders(string $coin, string $type = 'buy'): Builder
     {
         return Backtest::where('status', 'P')
-            ->where('coin', $coin);
+            ->where('pair', $coin);
     }
 
     public function sucessfulOrders(): Builder
