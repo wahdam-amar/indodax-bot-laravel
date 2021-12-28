@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Signals\Rsi;
 use App\Models\Order;
 use App\Models\Backtest;
 use App\Services\Indodax;
-use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use App\Services\Account\LiveAccount;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Account\BacktestAccount;
@@ -57,12 +56,12 @@ class UpdateOrdersJob implements ShouldQueue
 
         $backtests = Backtest::where('status', 'P')->get();
 
-        if ($orders->isEmpty() || $backtests->isEmpty()) {
+        if ($orders->isEmpty() && $backtests->isEmpty()) {
             return;
         }
 
         foreach ($backtests as $backtest) {
-            $price = (new Indodax())->setUser($backtest->user_id)->getCoinPrice('eth');
+            $price = (new Indodax())->getCoinPrice('eth');
 
             $account = new BacktestAccount();
 
