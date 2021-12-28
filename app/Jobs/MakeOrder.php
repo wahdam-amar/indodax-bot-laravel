@@ -4,13 +4,10 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Signals\Rsi;
-use App\Models\Order;
-use App\Models\Backtest;
 use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Log;
-use App\Services\Account\LiveAccount;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Account\BacktestAccount;
@@ -39,7 +36,6 @@ class MakeOrder implements ShouldQueue
      */
     public function handle()
     {
-
         $indicators = collect();
 
         $pipe = app(Pipeline::class)
@@ -68,6 +64,9 @@ class MakeOrder implements ShouldQueue
                 $price = (new Indodax())->setUser($user->id)->getCoinPrice('eth');
 
                 $backtest = new BacktestAccount;
+
+                $backtest->setUser($user);
+
                 $backtest->putOrder('eth', $price, '5000000');
 
                 // $account = new LiveAccount($user->id);

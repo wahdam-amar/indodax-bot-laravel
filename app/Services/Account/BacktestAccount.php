@@ -27,7 +27,7 @@ class BacktestAccount implements OrderInterface
         return Backtest::where('status', 'S');
     }
 
-    public function putOrder(string $coin, string $price, string $amount, string $type = 'buy'): Backtest
+    public function putOrder(string $coin, string $price, string $amount, string $type = 'buy')
     {
 
         $pendingOrder = $this->hasOrders($coin, $type);

@@ -4,22 +4,27 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Signals\Rsi;
+use App\Models\Signal;
 use Illuminate\Pipeline\Pipeline;
-
-use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
+use function PHPUnit\Framework\assertFalse;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class SignalTest extends TestCase
 {
+
+    use RefreshDatabase;
+
     /** @test */
     public function signal_buy_with_rsi()
     {
-        $indicators = collect([
-            0 => (object)[
-                'id' => 'rsi',
-                'result' => (object) ['value' => 28]
-            ]
+
+        Signal::factory()->create([
+            'rsi_value' => 29
         ]);
+
+        $indicators = collect();
 
         $pipe = app(Pipeline::class)
             ->send($indicators)
@@ -37,6 +42,11 @@ class SignalTest extends TestCase
     /** @test */
     public function cant_signal_buy_with_rsi()
     {
+
+        Signal::factory()->create([
+            'rsi_value' => 70,
+        ]);
+
         $indicators = collect([
             0 => (object)[
                 'id' => 'rsi',
@@ -60,12 +70,12 @@ class SignalTest extends TestCase
     /** @test */
     public function signal_sell_with_rsi()
     {
-        $indicators = collect([
-            0 => (object)[
-                'id' => 'rsi',
-                'result' => (object) ['value' => 70]
-            ]
+
+        Signal::factory()->create([
+            'rsi_value' => 70,
         ]);
+
+        $indicators = collect();
 
         $pipe = app(Pipeline::class)
             ->send($indicators)
@@ -77,6 +87,6 @@ class SignalTest extends TestCase
                 return $indicators;
             });
 
-        assertTrue($pipe->get('should_sell'));
+        assertTrue($pipe->get('should_sell', false));
     }
 }
