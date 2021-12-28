@@ -12,7 +12,7 @@ class Rsi
     {
         $rsiValue = Signal::latest('id')->first()->rsi_value;
 
-        if (!$rsiValue < 30) {
+        if ($rsiValue >= 30) {
             return $next($indicators);
         }
 
@@ -28,7 +28,7 @@ class Rsi
     {
         $rsiValue = Signal::latest('id')->first()->rsi_value;
 
-        if (!$rsiValue >= 70) {
+        if ($rsiValue < 70) {
             return $next($indicators);
         }
 
