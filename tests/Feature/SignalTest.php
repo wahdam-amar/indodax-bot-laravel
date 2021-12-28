@@ -6,14 +6,10 @@ use Tests\TestCase;
 use App\Signals\Rsi;
 use App\Models\Signal;
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertTrue;
-
 use function PHPUnit\Framework\assertFalse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 
 class SignalTest extends TestCase
 {
