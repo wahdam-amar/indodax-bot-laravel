@@ -36,7 +36,6 @@ class MakeOrder implements ShouldQueue
      */
     public function handle()
     {
-
         $indicators = collect();
 
         $pipe = app(Pipeline::class)

@@ -3,37 +3,43 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Signal;
-use App\Services\Indodax;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Jobs\MakeOrder;
+use App\Models\Backtest;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
+
+use function PHPUnit\Framework\assertTrue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrderJobTest extends TestCase
 {
+
+    use RefreshDatabase;
+
     /** @test */
     public function make_order_job_test()
     {
+        $user = User::factory()->create();
 
-        $indodax = new Indodax;
-        $price =  $indodax->getCoinPrice('eth');
+        $user->api()->create([
+            'user_id' => $user->id,
+            'api_key' => '123',
+            'secret_key' => '123',
+        ]);
 
-        $signal = new Signal;
-        $signal->macd_value = 1;
-        $signal->macd_signal = 1;
-        $signal->macd_hist = 1;
-        $signal->macd_crossover = 1;
-        $signal->rsi_value = 29;
-        $signal->stoch_k = null;
-        $signal->stoch_d = null;
-        $signal->market_price = $price;
-        $signal->coin_name = 'ETH/USDT';
-        $signal->via = 'binance';
-        $signal->save();
+        Signal::factory()->create([
+            'rsi_value' => 29,
+            'market_price' => 5000000
+        ]);
 
-        dispatch(new \App\Jobs\MakeOrder);
+        $job = new MakeOrder;
+        $job->handle();
 
         $this->assertDatabaseHas('backtests', [
-            'price_buy' => $price
+            'user_id' => $user->id,
+            'amount' => 5000000,
         ]);
     }
 }
