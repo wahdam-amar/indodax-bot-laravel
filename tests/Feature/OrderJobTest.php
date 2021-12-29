@@ -57,14 +57,16 @@ class OrderJobTest extends TestCase
 
         $backtest_before = Backtest::latest('id')->first();
 
+        $this->assertEquals('P', $backtest_before->status, 'Status should be P');
+
         $job = new UpdateOrdersJob;
 
         $job->handle();
 
         $backtest_after = Backtest::latest('id')->first();
 
-        $result = ($backtest_before->id = $backtest_after->id) && $backtest_before->status = 'P' && $backtest_after->status = 'S';
+        $this->assertEquals('S', $backtest_after->status, 'Status should be S');
 
-        assertTrue($result);
+        $this->assertTrue($backtest_before->id == $backtest_after->id, 'Backtest id should be the same');
     }
 }
