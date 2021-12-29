@@ -47,7 +47,6 @@ class OrderJobTest extends TestCase
 
     public function test_order_get_updated_when_price_meet()
     {
-
         $this->test_make_order_job();
 
         Signal::factory()->create([
@@ -56,6 +55,13 @@ class OrderJobTest extends TestCase
         ]);
 
         $backtest_before = Backtest::latest('id')->first();
+
+        // decrease price buy by 1.5
+        $priceBuy = $backtest_before->price_buy - ($backtest_before->price_buy * 1.5) / 100;
+
+        $backtest_before->price_buy =  $priceBuy;
+
+        $backtest_before->save();
 
         $this->assertEquals('P', $backtest_before->status, 'Status should be P');
 

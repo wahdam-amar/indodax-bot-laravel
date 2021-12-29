@@ -60,6 +60,13 @@ class BacktestAccount implements OrderInterface
 
     public function updateOrder(Backtest $backtest, $price_sell)
     {
+
+        $priceCondition = getCalculatePercentageChange($backtest->price_buy, $price_sell) >= 1.5;
+
+        if (!$priceCondition) {
+            return;
+        }
+
         $backtest->status = 'S';
         $backtest->time_sell = now();
         $backtest->price_sell = $price_sell;
