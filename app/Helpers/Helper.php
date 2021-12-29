@@ -4,11 +4,11 @@ use App\Services\Indicators;
 use App\Services\Indodax;
 
 if (!function_exists('getCalculatePercentageChange')) {
-    function getCalculatePercentageChange($original, $new): int
+    function getCalculatePercentageChange($original, $new): float
     {
         $diff = $new - $original;
         $increase = ($diff / $original) * 100;
-        return number_format($increase, 3);
+        return $increase;
     }
 }
 
