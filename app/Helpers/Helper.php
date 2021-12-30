@@ -13,7 +13,7 @@ if (!function_exists('getCalculatePercentageChange')) {
 }
 
 if (!function_exists('getProfit')) {
-    function getProfit(int $buy, int $increase): int
+    function getProfit(int $buy, float $increase): float
     {
         return $buy * $increase / 100;
     }
