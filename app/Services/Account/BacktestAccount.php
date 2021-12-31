@@ -11,23 +11,23 @@ class BacktestAccount implements OrderInterface
 {
     private User $user;
 
-    public function openOrders(): Builder
+    public function openOrders()
     {
-        return Backtest::where('status', 'P');
+        return Backtest::where('status', 'P')->get();
     }
 
     public function hasOrders(string $coin, string $type = 'buy')
     {
         return Backtest::where('status', 'P')
-            ->where('pair', $coin);
+            ->where('pair', $coin)->get();
     }
 
-    public function sucessfulOrders(): Builder
+    public function sucessfulOrders()
     {
-        return Backtest::where('status', 'S');
+        return Backtest::where('status', 'S')->get();
     }
 
-    public function putOrder(string $coin, string $price, string $amount, string $type = 'buy')
+    public function putOrder(string $coin, float $price, float $amount, string $type = 'buy')
     {
 
         $pendingOrder = $this->hasOrders($coin, $type);
