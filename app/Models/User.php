@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Order;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -47,6 +46,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Balance::class);
     }
+
     public function pendingOrder()
     {
         return $this->hasMany(Order::class);
@@ -60,5 +60,10 @@ class User extends Authenticatable
     public function backtest()
     {
         return $this->hasOne(Backtest::class);
+    }
+
+    public function setting()
+    {
+        return $this->hasOne(Setting::class);
     }
 }
