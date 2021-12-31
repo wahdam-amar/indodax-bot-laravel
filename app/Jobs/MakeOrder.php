@@ -61,16 +61,13 @@ class MakeOrder implements ShouldQueue
         try {
             foreach ($userWithApi as $user) {
 
-                $price = (new Indodax())->setUser($user->id)->getCoinPrice('eth');
+                $price = (new Indodax)->getCoinPrice('eth');
 
                 $backtest = new BacktestAccount;
 
                 $backtest->setUser($user);
 
                 $backtest->putOrder('eth', $price, '5000000');
-
-                // $account = new LiveAccount($user->id);
-                // $account->putOrder('eth', $price, '500000');
             }
         } catch (\Throwable $th) {
             Log::warning('Error make order : ' . $th);
