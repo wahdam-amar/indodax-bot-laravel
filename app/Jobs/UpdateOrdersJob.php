@@ -4,9 +4,9 @@ namespace App\Jobs;
 
 use App\Signals\Rsi;
 use App\Models\Order;
-use App\Models\Backtest;
 use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
+use App\Models\Backtest\Backtest;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

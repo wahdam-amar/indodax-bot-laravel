@@ -3,7 +3,7 @@
 namespace App\Services\Account;
 
 use App\Models\User;
-use App\Models\Backtest;
+use App\Models\Backtest\Backtest;
 use App\Interfaces\OrderInterface;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -88,7 +88,12 @@ class BacktestAccount implements OrderInterface
      */
     public function setUser(User $user)
     {
+        /**
+         * @var User $this->user
+         */
         $this->user = $user;
+
+        $this->user->load('setting');
 
         return $this;
     }

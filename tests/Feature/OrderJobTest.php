@@ -7,12 +7,13 @@ use App\Models\User;
 use App\Models\Signal;
 use App\Jobs\MakeOrder;
 use App\Jobs\UpdateOrdersJob;
-use App\Models\Backtest;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use App\Models\Backtest\Backtest;
 use Illuminate\Support\Facades\Log;
 
 
 use function PHPUnit\Framework\assertTrue;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrderJobTest extends TestCase
 {
