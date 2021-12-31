@@ -15,6 +15,8 @@ class CreateBacktestBalancesTable extends Migration
     {
         Schema::create('backtest_balances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('no action');
+            $table->bigInteger('amount', false, true)->nullable();
             $table->timestamps();
         });
     }
