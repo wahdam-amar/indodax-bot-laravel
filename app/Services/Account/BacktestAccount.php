@@ -5,7 +5,6 @@ namespace App\Services\Account;
 use App\Models\User;
 use App\Models\Backtest\Backtest;
 use App\Interfaces\OrderInterface;
-use Illuminate\Database\Eloquent\Builder;
 
 class BacktestAccount implements OrderInterface
 {
@@ -29,10 +28,9 @@ class BacktestAccount implements OrderInterface
 
     public function putOrder(string $coin, float $price, float $amount, string $type = 'buy')
     {
-
         $pendingOrder = $this->hasOrders($coin, $type);
 
-        if ($pendingOrder->exists()) {
+        if (!$pendingOrder->isEmpty()) {
             return;
         }
 
