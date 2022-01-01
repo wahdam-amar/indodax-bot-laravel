@@ -17,9 +17,8 @@ class BacktestTest extends TestCase
         $user = User::factory()
             ->has(UserSetting::factory()->count(1), 'setting')
             ->create();
-
-        logger()->info('user', [$user->setting]);
-
-        $this->assertTrue(true);
+        $this->assertDatabaseHas('user_settings', [
+            'user_id' => $user->id
+        ]);
     }
 }
