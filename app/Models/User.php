@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Order;
 use App\Models\Backtest\Backtest;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Backtest\BacktestBalance;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -66,5 +67,10 @@ class User extends Authenticatable
     public function setting()
     {
         return $this->hasOne(UserSetting::class);
+    }
+
+    public function backtestBalance()
+    {
+        return $this->hasOne(BacktestBalance::class);
     }
 }

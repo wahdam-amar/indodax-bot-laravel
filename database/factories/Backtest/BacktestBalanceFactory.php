@@ -3,6 +3,7 @@
 namespace Database\Factories\Backtest;
 
 use App\Models\Backtest\BacktestBalance;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BacktestBalanceFactory extends Factory
@@ -22,7 +23,8 @@ class BacktestBalanceFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => $this->for(User::class),
+            'amount' => $this->faker->randomDigitNotZero() * 100000,
         ];
     }
 }
