@@ -32,7 +32,7 @@ class LiveAccount implements OrderInterface
         // Todo: get all of sucessful orders
     }
 
-    public function putOrder(String $pair, String $price, String $amount, String $type = 'buy')
+    public function putOrder(String $pair, Float $price, Float $amount, String $type = 'buy')
     {
         if ($this->hasOrders($pair, 'buy') || $this->hasOrders($pair, 'sell')) {
             return;

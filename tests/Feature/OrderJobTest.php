@@ -7,12 +7,10 @@ use App\Models\User;
 use App\Models\Signal;
 use App\Jobs\MakeOrder;
 use App\Jobs\UpdateOrdersJob;
-use App\Models\Backtest;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Backtest\Backtest;
 use Illuminate\Support\Facades\Log;
-
-
 use function PHPUnit\Framework\assertTrue;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrderJobTest extends TestCase
 {
@@ -31,7 +29,7 @@ class OrderJobTest extends TestCase
         ]);
 
         Signal::factory()->create([
-            'rsi_value' => 29,
+            'rsi_value' => 19,
             'market_price' => 5000000
         ]);
 
@@ -40,7 +38,6 @@ class OrderJobTest extends TestCase
 
         $this->assertDatabaseHas('backtests', [
             'user_id' => $user->id,
-            'amount' => 5000000,
             'status' => 'P',
         ]);
     }

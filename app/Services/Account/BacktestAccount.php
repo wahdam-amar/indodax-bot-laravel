@@ -3,36 +3,37 @@
 namespace App\Services\Account;
 
 use App\Models\User;
-use App\Models\Backtest;
+use App\Models\Backtest\Backtest;
 use App\Interfaces\OrderInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Log\Logger;
+
+use function PHPUnit\Framework\isNull;
 
 class BacktestAccount implements OrderInterface
 {
     private User $user;
 
-    public function openOrders(): Builder
+    public function openOrders()
     {
-        return Backtest::where('status', 'P');
+        return Backtest::where('status', 'P')->get();
     }
 
     public function hasOrders(string $coin, string $type = 'buy')
     {
         return Backtest::where('status', 'P')
-            ->where('pair', $coin);
+            ->where('pair', $coin)->get();
     }
 
-    public function sucessfulOrders(): Builder
+    public function sucessfulOrders()
     {
-        return Backtest::where('status', 'S');
+        return Backtest::where('status', 'S')->get();
     }
 
-    public function putOrder(string $coin, string $price, string $amount, string $type = 'buy')
+    public function putOrder(string $coin, float $price, float $amount, string $type = 'buy')
     {
-
         $pendingOrder = $this->hasOrders($coin, $type);
 
-        if ($pendingOrder->exists()) {
+        if (!$pendingOrder->isEmpty()) {
             return;
         }
 
@@ -61,7 +62,9 @@ class BacktestAccount implements OrderInterface
     public function updateOrder(Backtest $backtest, $price_sell)
     {
 
-        $priceCondition = getCalculatePercentageChange($backtest->price_buy, $price_sell) >= 1.5;
+        $takeProfit = $backtest->setting()->exists() ? $backtest->setting->take_profit : 1.3;
+
+        $priceCondition = getCalculatePercentageChange($backtest->price_buy, $price_sell) >= $takeProfit;
 
         if (!$priceCondition) {
             return;
@@ -88,7 +91,12 @@ class BacktestAccount implements OrderInterface
      */
     public function setUser(User $user)
     {
+        /**
+         * @var User $this->user
+         */
         $this->user = $user;
+
+        $this->user->load('setting');
 
         return $this;
     }

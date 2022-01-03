@@ -4,9 +4,9 @@ namespace App\Jobs;
 
 use App\Signals\Rsi;
 use App\Models\Order;
-use App\Models\Backtest;
 use App\Services\Indodax;
 use Illuminate\Bus\Queueable;
+use App\Models\Backtest\Backtest;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -36,22 +36,6 @@ class UpdateOrdersJob implements ShouldQueue
      */
     public function handle()
     {
-        $indicators = collect();
-
-        $pipe = app(Pipeline::class)
-            ->send($indicators)
-            ->via('sell')
-            ->through([
-                Rsi::class
-            ])
-            ->then(function ($indicators) {
-                return $indicators;
-            });
-
-        if (!$pipe->get('should_sell')) {
-            return;
-        }
-
         $orders = Order::where('status', 0)->get();
 
         $backtests = Backtest::where('status', 'P')->get();

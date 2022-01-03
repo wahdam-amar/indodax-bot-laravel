@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\User;
+use App\Models\Backtest\BacktestBalance;
 use Illuminate\Http\Request;
-use App\Models\Backtest\Backtest;
 
-class BacktestController extends Controller
+class BacktestBalanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -43,25 +41,21 @@ class BacktestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Backtest  $backtest
+     * @param  \App\Models\Backtest\BacktestBalance  $backtestBalance
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(BacktestBalance $backtestBalance)
     {
-        if (auth()->id() !== (int) $id) {
-            return redirect()->route('dashboard');
-        }
-
-        return view('backtest.index');
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Backtest  $backtest
+     * @param  \App\Models\Backtest\BacktestBalance  $backtestBalance
      * @return \Illuminate\Http\Response
      */
-    public function edit(Backtest $backtest)
+    public function edit(BacktestBalance $backtestBalance)
     {
         //
     }
@@ -70,10 +64,10 @@ class BacktestController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Backtest  $backtest
+     * @param  \App\Models\Backtest\BacktestBalance  $backtestBalance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Backtest $backtest)
+    public function update(Request $request, BacktestBalance $backtestBalance)
     {
         //
     }
@@ -81,10 +75,10 @@ class BacktestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Backtest  $backtest
+     * @param  \App\Models\Backtest\BacktestBalance  $backtestBalance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Backtest $backtest)
+    public function destroy(BacktestBalance $backtestBalance)
     {
         //
     }
