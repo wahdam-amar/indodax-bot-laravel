@@ -36,22 +36,6 @@ class UpdateOrdersJob implements ShouldQueue
      */
     public function handle()
     {
-        $indicators = collect();
-
-        $pipe = app(Pipeline::class)
-            ->send($indicators)
-            ->via('sell')
-            ->through([
-                Rsi::class
-            ])
-            ->then(function ($indicators) {
-                return $indicators;
-            });
-
-        if (!$pipe->get('should_sell')) {
-            return;
-        }
-
         $orders = Order::where('status', 0)->get();
 
         $backtests = Backtest::where('status', 'P')->get();
