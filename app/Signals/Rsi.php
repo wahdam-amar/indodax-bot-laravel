@@ -4,6 +4,7 @@ namespace App\Signals;
 
 use Closure;
 use App\Models\Signal;
+use App\Services\Indodax;
 use Illuminate\Support\Collection;
 
 class Rsi
@@ -12,7 +13,7 @@ class Rsi
     {
         $rsiValue = Signal::latest('id')->first()->rsi_value;
 
-        if ($rsiValue >= 30) {
+        if ($rsiValue >= 20) {
             return $next($indicators);
         }
 

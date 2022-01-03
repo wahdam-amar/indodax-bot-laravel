@@ -5,6 +5,9 @@ namespace App\Services\Account;
 use App\Models\User;
 use App\Models\Backtest\Backtest;
 use App\Interfaces\OrderInterface;
+use Illuminate\Log\Logger;
+
+use function PHPUnit\Framework\isNull;
 
 class BacktestAccount implements OrderInterface
 {
@@ -59,7 +62,9 @@ class BacktestAccount implements OrderInterface
     public function updateOrder(Backtest $backtest, $price_sell)
     {
 
-        $priceCondition = getCalculatePercentageChange($backtest->price_buy, $price_sell) >= 1.5;
+        $takeProfit = $backtest->setting()->exists() ? $backtest->setting->take_profit : 1.3;
+
+        $priceCondition = getCalculatePercentageChange($backtest->price_buy, $price_sell) >= $takeProfit;
 
         if (!$priceCondition) {
             return;

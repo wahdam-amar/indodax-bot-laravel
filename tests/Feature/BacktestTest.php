@@ -25,9 +25,9 @@ class BacktestTest extends TestCase
 
     public function testUserHaveBacktestBalance()
     {
-        $user = User::factory()->has(BacktestBalance::factory()->count(1), 'backtestBalance')->create();
-
-        logger($user->backtestBalance);
+        $user = User::factory()
+            ->has(BacktestBalance::factory()->count(1), 'backtestBalance')
+            ->create();
 
         $this->assertDatabaseHas('backtest_balances', [
             'user_id' => $user->id
