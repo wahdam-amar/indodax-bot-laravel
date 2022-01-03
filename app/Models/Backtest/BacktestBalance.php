@@ -18,6 +18,11 @@ class BacktestBalance extends Model
 
     public function backtest()
     {
-        return $this->belongsTo(\App\Models\Backtest\Backtest::class);
+        return $this->belongsTo(\App\Models\Backtest\Backtest::class, 'user_id', 'user_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
     }
 }
