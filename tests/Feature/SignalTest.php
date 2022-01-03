@@ -21,7 +21,7 @@ class SignalTest extends TestCase
     {
 
         Signal::factory()->create([
-            'rsi_value' => 29
+            'rsi_value' => 19
         ]);
 
         $indicators = collect();

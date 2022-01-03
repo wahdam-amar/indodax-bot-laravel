@@ -29,7 +29,7 @@ class OrderJobTest extends TestCase
         ]);
 
         Signal::factory()->create([
-            'rsi_value' => 29,
+            'rsi_value' => 19,
             'market_price' => 5000000
         ]);
 
@@ -38,7 +38,6 @@ class OrderJobTest extends TestCase
 
         $this->assertDatabaseHas('backtests', [
             'user_id' => $user->id,
-            'amount' => 5000000,
             'status' => 'P',
         ]);
     }
