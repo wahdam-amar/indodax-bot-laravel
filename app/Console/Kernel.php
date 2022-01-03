@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new UpdateBalanceJob)->hourly();
-        $schedule->job(new UpdateOrdersJob)->everyFiveMinutes();
+        $schedule->job(new UpdateOrdersJob)->everyMinute();
         $schedule->job(new PruneSignalJob)->daily();
         $schedule->job(new CreateSignalJob)->everyFifteenMinutes()->appendOutputTo(storage_path('logs/CreateSignalJob.log'))->after(function () {
             MakeOrder::dispatch();
