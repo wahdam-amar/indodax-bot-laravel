@@ -8,8 +8,6 @@ use App\Models\Signal;
 use App\Jobs\MakeOrder;
 use App\Jobs\UpdateOrdersJob;
 use App\Models\Backtest\Backtest;
-use Illuminate\Support\Facades\Log;
-use function PHPUnit\Framework\assertTrue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrderJobTest extends TestCase
@@ -71,5 +69,26 @@ class OrderJobTest extends TestCase
         $this->assertEquals('S', $backtest_after->status, 'Status should be S');
 
         $this->assertTrue($backtest_before->id == $backtest_after->id, 'Backtest id should be the same');
+
+        return $backtest_after->user;
+    }
+
+    /** @depends test_order_get_updated_when_price_meet */
+    public function test_create_order_after_succsess_order($user)
+    {
+        $this->test_order_get_updated_when_price_meet();
+
+        Signal::factory()->create([
+            'rsi_value' => 19,
+            'market_price' => 5000000
+        ]);
+
+        $job = new MakeOrder;
+        $job->handle();
+
+        $this->assertDatabaseHas('backtests', [
+            'user_id' => $user->id,
+            'status' => 'P',
+        ]);
     }
 }
