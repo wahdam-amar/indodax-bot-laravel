@@ -8,7 +8,7 @@ class Dashboard extends Controller
     {
         $indodax = indodax();
 
-        $openOrders = $indodax->openOrders();
+        $openOrders = optional($indodax)->openOrders();
 
         return view('asset')->with('orders', $openOrders);
     }
