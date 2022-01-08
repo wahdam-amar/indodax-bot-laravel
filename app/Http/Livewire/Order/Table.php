@@ -22,7 +22,11 @@ class Table extends Component
     {
         $indodax = indodax();
 
-        $this->orders = collect($indodax->openOrders());
+        $indodax = optional($indodax)->openOrders();
+
+        if (!is_null($indodax)) {
+            $this->orders = collect($indodax);
+        }
     }
 
     public function render()

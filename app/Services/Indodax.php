@@ -144,7 +144,7 @@ class Indodax
         $self = new self;
         $self->setUser($this->user);
         $self->buildRequest('openOrders');
-        return $self->getResponse()->return->orders ?? null;
+        return optional($self->getResponse())->return->orders ?? null;
     }
 
     /**
@@ -307,6 +307,10 @@ class Indodax
 
         if (is_int($user)) {
             $this->user = User::with('api')->where('id', $user)->first();
+
+            if (!$this->user) {
+                return;
+            }
         }
 
         if ($user instanceof User) {
